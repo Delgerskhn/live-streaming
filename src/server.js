@@ -13,7 +13,7 @@ nms.on("prePublish", async (id, StreamPath, args) => {
     "[NodeEvent on prePublish]",
     `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`
   );
-
+    console.log(process.env.APP_HOST)
   //TODO: send request to main service and validate user by streamkey
   // User.findOne({stream_key: stream_key}, (err, user) => {
   //     if (!err) {
