@@ -7,4 +7,7 @@ COPY . .
 EXPOSE 8888
 EXPOSE 1935
 
+RUN apk update 
+RUN apk add ffmpeg
+
 CMD ["npm", "start"]
