@@ -9,31 +9,20 @@ nms.on("prePublish", async (id, StreamPath, args) => {
     "[NodeEvent on prePublish]",
     `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`
   );
-  console.log(
-    "[NodeEvent on prePublish]",
-    `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`
-  );
-  console.log(process.env.APP_HOST);
-  fetch("http://localhost:4000/api/lessons/validateStream?key=" + stream_key)
-    .then((res) => res.json())
-    .then((res) => {
-      console.log("key validation result:", res);
-      if (res == false) {
-        let session = nms.getSession(id);
-        session.reject();
-      }
-    });
-  //TODO: send request to main service and validate user by streamkey
-  // User.findOne({stream_key: stream_key}, (err, user) => {
-  //     if (!err) {
-  //         if (!user) {
-  //             let session = nms.getSession(id);
-  //             session.reject();
-  //         } else {
-  //             // do stuff
-  //         }
-  //     }
-  // });
+  try {
+    let resp = await fetch(
+      `${process.env.APP_HOST}/api/lessons/validateStream?key=` + stream_key
+    );
+    let result = await resp.json();
+    console.log("key validation result:", result);
+    if (result == false) {
+      throw "Unauthorized";
+    }
+  } catch (e) {
+    console.error(e);
+    let session = nms.getSession(id);
+    session.reject();
+  }
 });
 
 const getStreamKeyFromStreamPath = (path) => {
