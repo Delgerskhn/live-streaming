@@ -9,6 +9,33 @@ nms.on("prePublish", async (id, StreamPath, args) => {
     "[NodeEvent on prePublish]",
     `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`
   );
+  await validateStreamAndNotifyGoingLive(stream_key, id);
+});
+
+nms.on("donePublish", async (id, StreamPath, args) => {
+  let stream_key = getStreamKeyFromStreamPath(StreamPath);
+  console.log(
+    "[NodeEvent on donePublish]",
+    `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`
+  );
+  await requestEndStreaming(stream_key, id);
+});
+
+const getStreamKeyFromStreamPath = (path) => {
+  let parts = path.split("/");
+  return parts[parts.length - 1];
+};
+async function requestEndStreaming(stream_key, id) {
+  let resp = await fetch(
+    `${process.env.APP_HOST}/api/lessons/validateStream?key=` + stream_key,
+    {
+      method: "DELETE",
+    }
+  );
+  let result = await resp.json();
+  console.log("Request to end stream result:", result);
+}
+async function validateStreamAndNotifyGoingLive(stream_key, id) {
   try {
     let resp = await fetch(
       `${process.env.APP_HOST}/api/lessons/validateStream?key=` + stream_key
@@ -23,11 +50,6 @@ nms.on("prePublish", async (id, StreamPath, args) => {
     let session = nms.getSession(id);
     session.reject();
   }
-});
-
-const getStreamKeyFromStreamPath = (path) => {
-  let parts = path.split("/");
-  return parts[parts.length - 1];
-};
+}
 
 module.exports = nms;
