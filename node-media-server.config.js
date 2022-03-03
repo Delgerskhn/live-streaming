@@ -13,7 +13,8 @@ const config = {
     http: {
       port: 8888,
       mediaroot: "./media",
-      allow_origin: `${process.env.APP_HOST}`,
+      // allow_origin: `${process.env.APP_HOST}`,
+      allow_origin: `*`,
     },
     trans: {
       ffmpeg: process.env.FFMPEG_PATH,
