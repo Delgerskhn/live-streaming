@@ -9,7 +9,7 @@ EXPOSE 1935
 
 RUN apk update 
 RUN apk add ffmpeg
-ENV APP_HOST=http://103.50.205.199:3000
+ENV APP_HOST=https://mnlearn.herokuapp.com
 ENV FFMPEG_PATH=/usr/bin/ffmpeg
 
 CMD ["npm", "start"]
