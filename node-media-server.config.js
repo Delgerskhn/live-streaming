@@ -1,3 +1,4 @@
+require("dotenv").config();
 const config = {
   server: {
     secret: "kjVkuti2xAyF3JGCzSZTk0YWM5JhI9mgQW4rytXc",
@@ -23,6 +24,24 @@ const config = {
       tasks: [
         {
           app: "live",
+          //scale to 480p: https://stackoverflow.com/questions/60185314/node-media-server-force-480p-on-video-streaming
+          vc: "copy",
+          vcParams: [
+            "-vf",
+            "'scale=854:-1'",
+            "-b:v",
+            "1400k",
+            "-preset",
+            "fast",
+            "-profile:v",
+            "baseline",
+            "-bufsize",
+            "2100k",
+            "-tune",
+            "zerolatency",
+          ],
+          ac: "aac",
+          acParam: ["-ab", "64k", "-ac", "1", "-ar", "44100"],
           mp4: true,
           mp4Flags: "[movflags=frag_keyframe+empty_moov]",
           hls: true,

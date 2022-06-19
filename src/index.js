@@ -1,4 +1,4 @@
 const nodeMediaServer = require("./server");
-require("dotenv").config();
 
+require("dotenv").config();
 nodeMediaServer.run();
